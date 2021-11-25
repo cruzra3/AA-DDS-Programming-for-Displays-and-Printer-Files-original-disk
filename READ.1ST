@@ -1,0 +1,55 @@
+=================================================
+                 IMPORTANT!
+=================================================
+
+If you're running the Windows version of 
+the NEWS 3X/400 Code Upload Facility, you
+must have VBRUN300.DLL installed in your 
+\WINDOWS\SYSTEM directory.
+
+If you don't, you can copy the version provided 
+with the Code Upload Facility to the 
+\WINDOWS\SYSTEM directory.
+
+=================================================
+        VERSION 1.2 OF WINUP.EXE PROGRAM
+=================================================
+
+The WINUP.EXE program has the following 
+improvements or fixes: 
+
+1. Real Windows on-line help has been added.  This
+   also eliminated the need for the MHRUN300.DLL
+   and MHPFST.VBX files, which were used to 
+   implement the previous on-line help.
+
+=================================================
+        VERSION 1.1 OF WINUP.EXE PROGRAM
+=================================================
+
+The WINUP.EXE program has the following 
+improvements or fixes:    
+
+1. You can now upload to any AS/400 on a network 
+   of AS/400s. 
+
+2. WINUP now works with the Netsoft router. No more
+   "8232" error message.
+
+3. The AS/400 library list is only read once, now
+   when the Upload to 400 button is pressed. Before,
+   it was read everytime the button was pressed, 
+   causing an annoying delay.
+
+4. If you upload to a library not in your library list, 
+   WINUP will save the library name in the list of 
+   libraries, so you don't have to type it in each time 
+   you upload.
+
+5. The View window was enhanced with "<<" and ">>"
+   buttons, allowing you to easily view all the members
+   in a bundle without having to go back to the main
+   window.
+
+6. WINUP no longer requires IBM's PCSMCPY.DLL.
+

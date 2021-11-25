@@ -1,0 +1,258 @@
+                       NEWS 3X/400 Code Upload Facility
+
+
+Contents of the self-extracting file NEWSUPLD.EXE
+=========================================================================
+
+This self-extracting file contains the NEWS 3X/400 Code Upload Facility. 
+
+The NEWS 3X/400 Code Upload Facility requires the PC Support (or
+100% compatible) router, and the transfer and remote command DLLs or
+programs. These requirements are listed under the instructions for
+both the DOS and Windows versions of the Code Upload Facility.
+
+
+Contents of this READ.ME file
+=========================================================================
+
+I.   Installation
+II.  Introduction
+III. Windows NEWS 3X/400 Code Upload Facility
+IV.  DOS NEWS 3X/400 Code Upload Facility
+V.   Uploading to the S/36
+
+
+I. Installation
+=========================================================================
+
+Copy this self-expanding zip file to a directory on your hard disk, and 
+run it. It will expand the DOS and Windows versions of the Code Upload
+Facility.
+
+
+II. Introduction
+=========================================================================
+
+The Code Upload Facility doesn't upload individual source members. 
+Instead, it uses bundle (.BDL) files, each of which contains all the 
+source code and compile instructions for all members in an article.
+
+The programs that pick apart the bundle files and compile the members is
+called the Utility MAKE Facility, and includes the following files:
+
+    UNBUNDLE.CMD    Command.  
+    UNBUNDLE.RPG    RPG program. 
+    UNBUNDLE.CBL    COBOL program.
+    UNBUNDLE.CLP    CL program. 
+
+Uploading article source involves:
+
+    Uploading the Utility MAKE facility
+    Uploading a bundle file
+    Running the Utility MAKE facility on the bundle file     
+
+
+III. Windows NEWS 3X/400 Code Upload Facility
+=========================================================================
+
+Purpose
+-------
+
+This utility uploads, unbundles and compiles code to the AS/400.
+
+Requirements
+------------
+
+You must have VBRUN300.DLL installed in your \WINDOWS\SYSTEM directory.
+If you don't, you can copy the version provided with the Code Upload 
+Facility to the \WINDOWS\SYSTEM directory.
+
+The following PC Support DLLs need to be in one of your DOS path 
+directories:
+
+EHNTFW.DLL  PC Support file transfer DLL
+EHNAPPC.DLL PC Support router DLL
+EHNSRW.DLL  PC Support remote command DLL
+
+Uploading code to the AS/400
+----------------------------
+
+1. Just double-click on WINUP.EXE in the File Manager, or select Run 
+   from the Windows File menu, and select WINUP.EXE. 
+
+2. Once WINUP runs, press the "Change Dir" button and select the
+   directory containing the article code files, which have the
+   DOS extension ".BDL". The directory containing .BDL files is 
+   usually named after the month (e.g., AUG or SEP).
+
+3. Select the .BDL file containing the article code you want, and
+   press the "Upload to 400" button.
+
+4. Select a target library for the article source code. Enter a physical 
+   file name to contain the .BLD file, and a source file to contain the 
+   article source code. Both must not yet exist in the library; WINUP 
+   will create them.
+
+5. If you haven't uploaded the Utility MAKE programs, select "Upload 
+   Utility MAKE Facility", and enter the library and source file name
+   to contain the utility. If the source file doesn't exist, WINUP will
+   create it.
+
+   Note: Once created, the Utility MAKE programs must be in a library
+   in your library list.
+   
+6. Press "Upload/Compile" to upload, unbundle and compile the source; or
+   press "Upload Only" to upload the bundle file, but not to unbundle and
+   compile it. 
+   
+   If you choose "Upload/Compile", WINUP will submit the job to unbundle
+   and compile the code to batch.  
+   
+
+IV. DOS NEWS 3X/400 Code Upload Facility
+=========================================================================
+
+Purpose
+-------
+
+This utility uploads, unbundles and compiles code to the AS/400.
+
+              **************************************
+              * The DOS version of the Code Upload *
+              * Facility is currently command-line *
+              * driven. NEWS 3X/400 plans on       *
+              * adding an easy-to-use front-end    *
+              * for the DOS version in the next    *
+              * few months. Thanks for your        *
+              * patience.                          *
+              **************************************
+              
+Requirements              
+------------
+   
+The following PC Support programs need to be in one of your DOS path 
+directories:
+
+STF.EXE      PC Support file transfer program
+STF.MR0      Support file for STF.EXE. This must be located in 
+             directory MRI2924, directly subordinate to the directory 
+             containing STF.EXE.
+RMTCMD.EXE   PC Support submit remote command program
+RMTCMD.MR0   Support file for RMTCMD.EXE. This must be located in 
+             directory MRI2924, directly subordinate to the directory 
+             containing RMTCMD.EXE.
+RFROMPCB.EXE PC Support file transfer program.
+
+About the PC Support STF and RMTCMD programs
+--------------------------------------------
+
+STF.EXE MUST BE started on your PC before the DOS Code Upload Facility 
+will work. RMTCMD.EXE doesn't have to be run ahead of time.
+
+STF.EXE and RMTCMD.EXE are in the QIWSFLR and QIWSFL2 PC Support folders. 
+To start STF, assign QIWSFLR (if you're using regular DOS PC Support) 
+or QIWSFL2 (if you're using extended DOS PC Support) to a drive, log to 
+that drive and type STF and press the enter key.
+
+The 22K STF.EXE program will loaded into your PC's memory and ready
+for the Automated Upload Facility to use. After uploading the code, you
+can remove STF.EXE from your PC's memory with the PC Support DOS command:
+    RMVPCS STF /F
+
+For ease of use, consider moving STF.EXE, STF.MR0, RMTCMD.EXE and 
+RMTCMD.MR0 to your local hard drive. See the PC Support User's Guide or 
+the PC Support Technical Reference for DOS for more about STF.EXE and 
+RMTCMD.EXE. This distribution diskette also contains two DOS batch files, 
+COPYSTF.BAT and COPYRMT.BAT, that you might find helpful to copy STF.EXE,
+STF.MR0, RMTCMD.EXE and RMTCMD.MR0 to your local hard drive. 
+
+You may put STF.EXE and RMTCMD.EXE in any local subdirectory on your PC, 
+however STF.MR0 and RMTCMD.MR0 _must_ be in a subdirectory named MRI2924, 
+directly subordinate to the directory containing STF.EXE and RMTCMD.EXE.
+
+Uploading the MAKE facility to the AS/400
+-----------------------------------------
+
+1. STF.EXE MUST BE started on your PC before the DOS Code Upload 
+   Facility program DOSMAKE will work.
+
+2. Run DOSMAKE to create the host-based programs that will unbundle and 
+   compile the article code:
+
+       DOSMAKE pc-directory host-library host-source-file host-compiler
+
+   where
+
+   pc-directory 
+   PC directory containing the Utility MAKE facility -- programs 
+   UNBUNDLE.CLP, UNBUNDLE.CMD, UNBUNDLE.RPG, or UNBUNDLE.CBL).
+
+   host-library
+   AS/400 library to contain the MAKE facility.	This library must be in
+   your library list.
+
+   host-source-file
+   AS/400 source file to contain MAKE facility programs.
+   NOTE: This file will be created by this utility, so it must
+         not exist when this utility runs.
+   
+   host-compiler
+   If RPG, the RPG version of the MAKE facility will be uploaded and compiled.
+   If COBOL, the COBOL version will be uploaded and compiled. If not specified,
+   RPG is assumed.
+   
+   An example of calling DOSMAKE is:
+
+       DOSMAKE \news mylib mysource RPG
+
+   The above will upload and compile the RPG version of the MAKE facility, 
+   stored in PC directory \news, into mylib/mysource.
+   
+Uploading code to the AS/400
+----------------------------
+
+1. STF.EXE MUST BE started on your PC before the DOS Code Upload 
+   Facility program DOSMAKE will work.
+
+2. Run DOSUP to upload the article code bundle file and compile the article
+   code:
+
+       DOSUP pc-bundle-file host-library host-bundle-file host-source-file 
+
+   where
+
+   pc-bundle-file 
+   Path and name of the bundle file (e.g., N949133.BDL).
+
+   host-library
+   Library name to contain host-bundle-file and host-source-file
+   
+   host-bundle-file
+   Physical file that will contain the uploaded bundle file.
+   NOTE: This file will be created by this utility, so it must
+         not exist when this utility runs.
+
+   host-source-file
+   Source file that will contain the article source members.
+   NOTE: This file will be created by this utility, so it must
+         not exist when this utility runs.
+
+  An example of calling DOSUP is:
+
+      dosup  \sep\n949133.bdl mylib n949133b n949133l
+
+  The above does the following:
+      1. creates a file called N949133 in library MYLIB, 
+      2. copies PC file \sep\n949133.bdl to it, 
+      3. creates source file N949133L in library MYLIB,
+      4. unbundles N949133B and stores the source in file N949133,
+      5. compiles the source in N949133L according to the compile
+         instructions in the bundle file.
+
+V.  Uploading to the S/36
+=========================================================================
+
+S/36 programs can be uploaded manually using a file transfer package
+such as IBM's PC Support, IDEA's DataLink or Andrew's Emerald. After
+uploading, follow the instructions in the articles to compile the 
+members.

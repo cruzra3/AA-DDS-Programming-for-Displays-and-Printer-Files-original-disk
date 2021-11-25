@@ -1,0 +1,221 @@
+      * Copyright 1994 (c) Duke Communications International
+      * All rights reserved
+     FBUNDLE  IF  F     100            DISK                           UC
+     FSOURCE  O   F      92            DISK                      A    UC
+      *
+     E                    AL         10  1
+     E                    CS        512  1
+      *
+     IBUNDLE  NS       1 CT
+     I                                        1   1 RCDTYP
+     I        NS       1 CM
+     I                                        1   1 RCDTYP
+     I                                        3  12 SRCMBR
+     I                                       14  23 SRCTYP
+     I                                       25  76 SRCTXT
+     I        NS       1 CW
+     I                                        1   1 RCDTYP
+     I                                        3  12 SRCMBR
+     I                                       14  93 SRCLIN
+     I        NS       1 CC
+     I                                        1   1 RCDTYP
+     I                                        3  12 SRCMBR
+     I                                       14  93 CMPCMD
+     I        NS       1 CE
+     I                                        1   1 RCDTYP
+     I                                        3  12 SRCMBR
+     I        NS
+     I                                        1   1 RCDTYP
+      *
+     IQBDLF       DS
+     I                                        1   8 BDLFN
+     I                                        9  18 BDLFL
+      *
+     IQSRCF       DS
+     I                                        1  10 SRCFN
+     I                                       11  20 SRCFL
+      *
+     ICMDSTR      DS                            512
+      *
+     I              'OVRDBF FILE(BUNDLE) -C         OVRBF1
+     I              'TOFILE('
+     I              '/'                   C         OVRBF2
+     I              ')'                   C         OVRBF3
+     I              'ADDPFM FILE('        C         ADDPF1
+     I              '/'                   C         ADDPF2
+     I              ') MBR('              C         ADDPF3
+     I              ') SRCTYPE('          C         ADDPF4
+     I              ') TEXT('             C         ADDPF5
+     I              ')'                   C         ADDPF6
+     I              'OVRDBF FILE(SOURCE) -C         OVRSF1
+     I              'TOFILE('
+     I              '/'                   C         OVRSF2
+     I              ') MBR('              C         OVRSF3
+     I              ')'                   C         OVRSF4
+     I              'DLTOVR FILE(SOURCE)' C         DLTOV1
+     I              'FFFFFFFFFF'          C         F10
+     I              'LLLLLLLLLL'          C         L10
+     I              'UNBUNDLEZ'           C         UBZ
+      *-----------------------------------------------------------------
+      * Mainline
+     C           *ENTRY    PLIST
+     C                     PARM           QBDLF
+     C                     PARM           QSRCF
+      *
+     C                     EXSR INZPGM
+     C                     EXSR READIF                     Read input file
+     C                     EXSR TRMPGM
+      *
+     C                     MOVE *ON       *INLR
+      *
+     C           INZPGM    BEGSR
+     C                     MOVE CMDSTR    CMDSTR
+     C                     Z-ADD512       CMDLEN 155
+     C                     MOVE PART1     PART1  80
+     C                     MOVE PART2     PART2  80
+     C                     MOVE PART3     PART3  80
+     C                     MOVE PART4     PART4  80
+     C                     MOVE PART5     PART5  80
+     C                     MOVE ADJLIB    ADJLIB 10
+     C                     MOVE SLNLEN    SLNLEN  30
+     C                     MOVE SP        SP      30
+     C                     MOVE SEQNBR    SEQNBR  60
+     C                     MOVE SRCSEQ    SRCSEQ  6
+     C                     MOVE SRCDAT    SRCDAT  6
+     C                     EXSR OPNBDL                     Open bundle fil
+     C                     EXSR RGTADJ
+     C                     ENDSR
+      *
+     C           OPNBDL    BEGSR
+     C           OVRBF1    CAT  BDLFL:0   CMDSTR    P
+     C                     CAT  OVRBF2:0  CMDSTR
+     C                     CAT  BDLFN:0   CMDSTR
+     C                     CAT  OVRBF3:0  CMDSTR
+     C                     CALL 'QCMDEXC'
+     C                     PARM           CMDSTR
+     C                     PARM           CMDLEN
+     C                     OPEN BUNDLE
+     C                     ENDSR
+      *
+     C           RGTADJ    BEGSR
+     C           ' '       CHEKRSRCFL     SLNLEN
+     C                     MOVEA*BLANK    AL
+     C           11        SUB  SLNLEN    SP
+     C                     MOVEASRCFL     AL,SP
+     C                     MOVEAAL        ADJLIB
+     C                     ENDSR
+      *
+     C           READIF    BEGSR
+     C           *IN99     DOUEQ*ON
+     C                     READ BUNDLE                   99
+     C           *IN99     IFEQ *OFF
+     C                     EXSR PRCRCD
+     C                     ENDIF
+     C                     ENDDO
+     C                     ENDSR
+      *
+     C           PRCRCD    BEGSR
+     C           RCDTYP    CASEQ'M'       NEWMBR
+     C           RCDTYP    CASEQ'W'       WRTSRC
+     C           RCDTYP    CASEQ'C'       CMPSRC
+     C           RCDTYP    CASEQ'E'       ENDMBR
+     C                     ENDCS
+     C                     ENDSR
+      *
+     C           NEWMBR    BEGSR
+     C           ADDPF1    CAT  SRCFL:0   CMDSTR    P
+     C                     CAT  ADDPF2:0  CMDSTR
+     C                     CAT  SRCFN:0   CMDSTR
+     C                     CAT  ADDPF3:0  CMDSTR
+     C                     CAT  SRCMBR:0  CMDSTR
+     C                     CAT  ADDPF4:0  CMDSTR
+     C                     CAT  SRCTYP:0  CMDSTR
+     C                     CAT  ADDPF5:0  CMDSTR
+     C                     CAT  SRCTXT:0  CMDSTR
+     C                     CAT  ADDPF6:0  CMDSTR
+     C                     CALL UBZ
+     C                     PARM           CMDSTR
+     C           OVRSF1    CAT  SRCFL:0   CMDSTR    P
+     C                     CAT  OVRSF2:0  CMDSTR
+     C                     CAT  SRCFN:0   CMDSTR
+     C                     CAT  OVRSF3:0  CMDSTR
+     C                     CAT  SRCMBR:0  CMDSTR
+     C                     CAT  OVRSF4:0  CMDSTR
+     C                     CALL 'QCMDEXC'
+     C                     PARM           CMDSTR
+     C                     PARM           CMDLEN
+     C                     OPEN SOURCE
+     C                     ENDSR
+      *
+     C           WRTSRC    BEGSR
+     C                     ADD  1         SEQNBR
+     C                     MOVE SEQNBR    SRCSEQ
+     C                     MOVE '000000'  SRCDAT
+     C                     EXCPT
+     C                     ENDSR
+      *
+     C           CMPSRC    BEGSR
+     C                     MOVE CMPCMD    PART1
+     C                     READ BUNDLE                   99
+     C                     MOVE CMPCMD    PART2
+     C                     READ BUNDLE                   99
+     C                     MOVE CMPCMD    PART3
+     C                     READ BUNDLE                   99
+     C                     MOVE CMPCMD    PART4
+     C                     READ BUNDLE                   99
+     C                     MOVE CMPCMD    PART5
+     C                     MOVEA*BLANK    CS
+     C                     MOVEAPART1     CS,1
+     C                     MOVEAPART2     CS,81
+     C                     MOVEAPART3     CS,161
+     C                     MOVEAPART4     CS,241
+     C                     MOVEAPART5     CS,321
+     C                     MOVEACS        CMDSTR
+     C                     EXSR SEARCH
+     C           3         SUBSTCMDSTR    FIRST3  3
+     C           FIRST3    IFEQ 'OVR'
+     C                     CALL 'QCMDEXC'
+     C                     PARM           CMDSTR
+     C                     PARM           CMDLEN
+     C                     ELSE
+     C                     CALL UBZ
+     C                     PARM           CMDSTR
+     C                     ENDIF
+     C                     ENDSR
+      *
+     C           SEARCH    BEGSR
+     C           *IN98     DOUEQ*OFF
+     C           L10       SCAN CMDSTR    SP             98
+     C           *IN98     IFEQ *ON
+     C                     MOVEACMDSTR    CS
+     C                     MOVEAADJLIB    CS,SP
+     C                     MOVEACS        CMDSTR
+     C                     ENDIF
+     C                     ENDDO
+     C           *IN98     DOUEQ*OFF
+     C           F10       SCAN CMDSTR    SP             98
+     C           *IN98     IFEQ *ON
+     C                     MOVEACMDSTR    CS
+     C                     MOVEASRCFN     CS,SP
+     C                     MOVEACS        CMDSTR
+     C                     ENDIF
+     C                     ENDDO
+     C                     ENDSR
+      *
+     C           ENDMBR    BEGSR
+     C                     CLOSESOURCE
+     C                     MOVELDLTOV1    CMDSTR    P
+     C                     CALL 'QCMDEXC'
+     C                     PARM           CMDSTR
+     C                     PARM           CMDLEN
+     C                     ENDSR
+      *
+     C           TRMPGM    BEGSR
+     C                     CLOSEBUNDLE
+     C                     ENDSR
+      *
+     OSOURCE  EADD
+     O                         SRCSEQ     6
+     O                         SRCDAT    12
+     O                         SRCLIN    92
+
